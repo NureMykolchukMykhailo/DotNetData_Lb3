@@ -1,0 +1,135 @@
+﻿@if (TempData.ContainsKey("ErrorMessage"))
+{
+    Console.WriteLine("yes");
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<form asp-action="InsertSchedules" asp-controller="DoctorsSchedule" method="post">
+    <div class="form-group">
+        <label for="phoneNumber">Доктор:</label>
+        <select class="form-control" id="patientPhoneNumber" name="doctorId">
+            <option value="">Выберите доктора</option>
+            @foreach (Doctor doctor in ViewBag.Doctors)
+            {
+                <option value="@doctor.DoctorId">@doctor.ToString()</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+
+        <label for="dayOfWeek">День недели:</label>
+        <select class="form-control" id="dayOfWeek" name="dayOfWeek">
+            <option value="">Выберите день недели</option>
+            <option value="Понеділок">Понеділок</option>
+            <option value="Вівторок">Вівторок</option>
+            <option value="Середа">Середа</option>
+            <option value="Четвер">Четвер</option>
+            <option value="П'ятниця'">ятниця</option>
+            <option value="Субота">Субота</option>
+            <option value="Неділя">Неділя</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="startTime">Начальное время:</label>
+        <input type="time" class="form-control" id="startTime" name="startTime">
+    </div>
+    <div class="form-group">
+        <label for="endTime">Конечное время:</label>
+        <input type="time" class="form-control" id="endTime" name="endTime">
+    </div>
+    <button type="submit" class="btn btn-primary">Обновить расписание доктора</button>
+</form>
+
+
+<form asp-action="FindTopEarningDoctor" asp-controller="DoctorsSchedule" method="post">
+    <div class="form-group">
+        <label for="date">Дата:</label>
+        <input type="date" class="form-control" id="date" name="Date">
+    </div>
+    <button type="submit" class="btn btn-primary">Найти самого заработавшего доктора</button>
+</form>
+
+@if (ViewData.ContainsKey("TopEarningDoctors"))
+{
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Заработок</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (TopEarningDoctor el in (List<TopEarningDoctor>) ViewData["TopEarningDoctors"])
+            {
+                <tr>
+                    <td>@el.FirstName</td>
+                    <td>@el.LastName</td>
+                    <td>@el.TotalEarnins</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<form asp-action="GetSpentByPatient" asp-controller="DoctorsSchedule" method="post">
+    
+    <div class="form-group">
+        <label for="phoneNumber">Пациент:</label>
+        <select class="form-control" id="patientPhoneNumber" name="phoneNumber">
+            <option value="">Выберите пациента</option>
+            @foreach (var patient in ViewBag.Patients)
+            {
+                <option value="@patient.PhoneNumber">@patient.ToString()</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Найти потраченные суммы пациентом</button>
+</form>
+
+@if (ViewData.ContainsKey("SpentByPatient"))
+{
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Доктор</th>
+                <th scope="col">Специальность</th>
+                <th scope="col">Потрачено</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (SpentByPatient el in (List<SpentByPatient>) ViewData["SpentByPatient"])
+            {
+                <tr>
+                    <td>@el.DoctorName</td>
+                    <td>@el.Speciality</td>
+                    <td>@el.TotalSpent</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<form asp-action="RemoveSubstring" asp-controller="DoctorsSchedule" method="post">
+    <div class="form-group">
+        <label for="inputString">Входная строка:</label>
+        <input type="text" class="form-control" id="inputString" name="InputString">
+    </div>
+    <div class="form-group">
+        <label for="startPosition">Позиция начала:</label>
+        <input type="number" class="form-control" id="startPosition" name="StartPosition">
+    </div>
+    <div class="form-group">
+        <label for="lengthToRemove">Длина для удаления:</label>
+        <input type="number" class="form-control" id="lengthToRemove" name="LengthToRemove">
+    </div>
+    <button type="submit" class="btn btn-primary">Удалить подстроку</button>
+</form>
+
+@if (ViewData.ContainsKey("RemoveSubstring"))
+{
+    <div>@ViewData["RemoveSubstring"]</div>
+}

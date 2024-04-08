@@ -1,0 +1,37 @@
+﻿
+<form asp-action="InsertAppointment" asp-controller="Appointment" method="post">
+    <div class="form-group">
+        <label for="appointmentType">Тип посещения:</label>
+        <input type="text" class="form-control" id="appointmentType" name="AppointmentType">
+    </div>
+    <div class="form-group">
+        <label for="appointmentDate">Дата посещения:</label>
+        <input type="date" class="form-control" id="appointmentDate" name="AppointmentDate">
+    </div>
+    <div class="form-group">
+        <label for="appointmentPrice">Цена посещения:</label>
+        <input type="number" class="form-control" id="appointmentPrice" name="AppointmentPrice">
+    </div>
+    <div class="form-group">
+        <label for="doctorId">Доктор:</label>
+        <select class="form-control" id="doctorId" name="DoctorId">
+            <option value="">Выберите доктора</option>
+            @foreach (var doctor in ViewBag.Doctors)
+            {
+                <option value="@doctor.DoctorId">@doctor.ToString()</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="patientId">Пациент:</label>
+        <select class="form-control" id="patientId" name="PatientId">
+            <option value="">Выберите пациента</option>
+            @foreach (var patient in ViewBag.Patients)
+            {
+                <option value="@patient.PatientId">@patient.ToString()</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить посещение</button>
+</form>
+

@@ -1,0 +1,20 @@
+﻿
+<form asp-action="InsertPatient" asp-controller="Patients" method="post">
+    <div class="form-group">
+        <label for="firstName">Имя:</label>
+        <input type="text" class="form-control" id="firstName" name="FirstName">
+    </div>
+    <div class="form-group">
+        <label for="lastName">Фамилия:</label>
+        <input type="text" class="form-control" id="lastName" name="LastName">
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Номер телефона:</label>
+        <input type="text" class="form-control" id="phoneNumber" name="PhoneNumber">
+    </div>
+    <div class="form-group">
+        <label for="age">Возраст:</label>
+        <input type="number" class="form-control" id="age" name="Age">
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить</button>
+</form>

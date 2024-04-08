@@ -1,0 +1,31 @@
+﻿@model List<Appointment>
+
+<partial name="NewAppointmentAdding" />
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Доктор</th>
+            <th scope="col">Номер доктора</th>
+            <th scope="col">Пациент</th>
+            <th scope="col">Номер пациента</th>
+            <th scope="col">Тип</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
+            <tr>
+                <td>@appointment.Doctor.ToString()</td>
+                <td>@appointment.Doctor.PhoneNumber</td>
+                <td>@appointment.Patient.ToString()</td>
+                <td>@appointment.Patient.PhoneNumber</td>
+                <td>@appointment.AppointmentType</td>
+                <td>@appointment.AppointmentPrice</td>
+                <td>@appointment.AppointmentDate.ToString("dd.mm.yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>

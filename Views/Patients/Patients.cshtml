@@ -1,0 +1,25 @@
+﻿@model List<Patient>
+
+<partial name="NewPatientAdding" />
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Номер телефона</th>
+            <th scope="col">Возраст</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model)
+        {
+            <tr>
+                <td>@patient.FirstName</td>
+                <td>@patient.LastName</td>
+                <td>@patient.PhoneNumber</td>
+                <td>@patient.Age</td>
+            </tr>
+        }
+    </tbody>
+</table>

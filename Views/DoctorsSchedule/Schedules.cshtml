@@ -1,0 +1,26 @@
+﻿@model List<DoctorsSchedule>
+
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Доктор</th>
+            <th scope="col">Номер доктора</th>
+            <th scope="col">День недели</th>
+            <th scope="col">Начало</th>
+            <th scope="col">Конец</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var schedule in Model)
+        {
+            <tr>
+                <td>@schedule.Doctor.ToString()</td>
+                <td>@schedule.Doctor.PhoneNumber</td>
+                <td>@schedule.DayOfWeek</td>
+                <td>@schedule.StartTime.Remove(5)</td>
+                <td>@schedule.EndTime.Remove(5)</td>
+            </tr>
+        }
+    </tbody>
+</table>
