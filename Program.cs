@@ -9,12 +9,15 @@ namespace DotNetData_Lb3
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddSession();
+
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<DoctorsRepo>();
             builder.Services.AddScoped<PatientsRepo>();
             builder.Services.AddScoped<AppointmentsRepo>();
             builder.Services.AddScoped<DoctorsScheduleRepo>();
             builder.Services.AddScoped<FunctionsRepo>();
+            
 
             var app = builder.Build();
 
@@ -24,6 +27,7 @@ namespace DotNetData_Lb3
                 
                 app.UseHsts();
             }
+            app.UseSession();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

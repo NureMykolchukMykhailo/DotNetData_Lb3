@@ -1,6 +1,7 @@
 ﻿using DotNetData_Lb3.Repos;
 using Microsoft.AspNetCore.Mvc;
 using DotNetData_Lb3.Models;
+using System.Text;
 
 namespace DotNetData_Lb3.Controllers
 {
@@ -33,6 +34,9 @@ namespace DotNetData_Lb3.Controllers
             List<Doctor> doctors = doctorsRepo.GetDoctors();
             ViewBag.Doctors = doctors;
             ViewBag.Patients = patients;
+
+            string value = HttpContext.Session.GetString("ErrorMessage");
+            Console.WriteLine(value);
             return View("Procedures");
         }
 
@@ -59,6 +63,16 @@ namespace DotNetData_Lb3.Controllers
             } catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
+                HttpContext.Session.SetString("ErrorMessage", ex.Message);
+                //foreach (var el in TempData)
+                //{
+                //    Console.WriteLine("InsertSchedules action " + el.Value);
+                //}
+                //List<Patient> patients = await patientsRepo.GetPatients();
+                //List<Doctor> doctors = doctorsRepo.GetDoctors();
+                //ViewBag.Doctors = doctors;
+                //ViewBag.Patients = patients;
+                //return View("Procedures");
                 return RedirectToAction("GetProcedures");
             }
         }
