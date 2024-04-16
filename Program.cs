@@ -1,5 +1,7 @@
 using DotNetData_Lb3.Repos;
 using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using DotNetData_Lb3.Models;
 
 namespace DotNetData_Lb3
 {
@@ -17,7 +19,12 @@ namespace DotNetData_Lb3
             builder.Services.AddScoped<AppointmentsRepo>();
             builder.Services.AddScoped<DoctorsScheduleRepo>();
             builder.Services.AddScoped<FunctionsRepo>();
-            
+
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+            });
+
 
             var app = builder.Build();
 

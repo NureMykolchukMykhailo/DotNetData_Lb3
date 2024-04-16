@@ -14,9 +14,9 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpGet("doctors")]
-        public IActionResult GetDoctors()
+        public async Task<IActionResult> GetDoctors()
         {
-            List<Doctor> doctors = doctorsRepo.GetDoctors();
+            List<Doctor> doctors = await doctorsRepo.GetDoctors();
             return View("Doctors", doctors);
         }
 

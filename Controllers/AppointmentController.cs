@@ -21,7 +21,7 @@ namespace DotNetData_Lb3.Controllers
         public async Task<IActionResult> GetAppointments()
         {
             List<Appointment> appointments = await appointmentsRepo.GetAppointments();
-            ViewBag.Doctors = doctorsRepo.GetDoctors();
+            ViewBag.Doctors = await doctorsRepo.GetDoctors();
             ViewBag.Patients = await patientsRepo.GetPatients();
             return View("Appointments", appointments);
         }

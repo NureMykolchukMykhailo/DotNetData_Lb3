@@ -1,67 +1,70 @@
 ﻿using DotNetData_Lb3.Models;
 using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNetData_Lb3.Repos
 {
     public class DoctorsRepo
     {
-        private readonly string connectionString;
-
-        public DoctorsRepo()
+        DatabaseContext context;
+        public DoctorsRepo(DatabaseContext _context)
         {
-            connectionString = Environment.GetEnvironmentVariable("DbConnection");
+            context = _context;
         }
 
-        public List<Doctor> GetDoctors()
+        public async Task<List<Doctor>> GetDoctors()
         {
-            List<Doctor> doctors = new();
+            return await context.Doctors.ToListAsync();
 
-            using (SqlConnection connection = new(connectionString))
-            {
-                string sqlQuery = "SELECT doctor_id, first_name, last_name, phone_number, speciality FROM doctors";
-                SqlCommand command = new(sqlQuery, connection);
+            //List<Doctor> doctors = new();
 
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+            //using (SqlConnection connection = new(connectionString))
+            //{
+            //    string sqlQuery = "SELECT doctor_id, first_name, last_name, phone_number, speciality FROM doctors";
+            //    SqlCommand command = new(sqlQuery, connection);
 
-                while (reader.Read())
-                {
-                    Doctor doctor = new Doctor
-                    {
-                        DoctorId = Convert.ToInt32(reader["doctor_id"]),
-                        FirstName = reader["first_name"].ToString(),
-                        LastName = reader["last_name"].ToString(),
-                        PhoneNumber = reader["phone_number"].ToString(),
-                        Speciality = reader["speciality"].ToString()
-                    };
+            //    connection.Open();
+            //    SqlDataReader reader = command.ExecuteReader();
 
-                    doctors.Add(doctor);
-                }
+            //    while (reader.Read())
+            //    {
+            //        Doctor doctor = new Doctor
+            //        {
+            //            DoctorId = Convert.ToInt32(reader["doctor_id"]),
+            //            FirstName = reader["first_name"].ToString(),
+            //            LastName = reader["last_name"].ToString(),
+            //            PhoneNumber = reader["phone_number"].ToString(),
+            //            Speciality = reader["speciality"].ToString()
+            //        };
 
-                reader.Close();
-            }
+            //        doctors.Add(doctor);
+            //    }
 
-            return doctors;
+            //    reader.Close();
+            //}
+
+            //return doctors;
         }
 
         public async Task<bool> InsertNewDoctor(Doctor d)
         {
-            using (SqlConnection connection = new(connectionString))
-            {
-                string sqlQuery = "INSERT INTO doctors VALUES(@first_name, @last_name, @phone_number, @speciality)";
+            return false;
+            //using (SqlConnection connection = new(connectionString))
+            //{
+            //    string sqlQuery = "INSERT INTO doctors VALUES(@first_name, @last_name, @phone_number, @speciality)";
 
-                SqlCommand command = new SqlCommand(sqlQuery, connection);
+            //    SqlCommand command = new SqlCommand(sqlQuery, connection);
 
-                command.Parameters.AddWithValue("@first_name", d.FirstName);
-                command.Parameters.AddWithValue("@last_name", d.LastName);
-                command.Parameters.AddWithValue("@phone_number", d.PhoneNumber);
-                command.Parameters.AddWithValue("@speciality", d.Speciality);
+            //    command.Parameters.AddWithValue("@first_name", d.FirstName);
+            //    command.Parameters.AddWithValue("@last_name", d.LastName);
+            //    command.Parameters.AddWithValue("@phone_number", d.PhoneNumber);
+            //    command.Parameters.AddWithValue("@speciality", d.Speciality);
 
-                await connection.OpenAsync();
-                int rowsAffected = await command.ExecuteNonQueryAsync();
+            //    await connection.OpenAsync();
+            //    int rowsAffected = await command.ExecuteNonQueryAsync();
 
-                return rowsAffected > 0;
-            }
+            //    return rowsAffected > 0;
+            //}
         }
     }
 }

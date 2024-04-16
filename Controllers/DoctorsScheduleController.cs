@@ -31,7 +31,7 @@ namespace DotNetData_Lb3.Controllers
         public async Task<IActionResult> GetProcedures()
         {
             List<Patient> patients = await patientsRepo.GetPatients();
-            List<Doctor> doctors = doctorsRepo.GetDoctors();
+            List<Doctor> doctors = await doctorsRepo.GetDoctors();
             ViewBag.Doctors = doctors;
             ViewBag.Patients = patients;
 
@@ -42,11 +42,8 @@ namespace DotNetData_Lb3.Controllers
 
         [HttpPost("schedules/add")]
         public async Task<IActionResult> InsertSchedules([FromForm] int doctorId, 
-            string dayOfWeek, string startTime, string endTime)
+            string dayOfWeek, TimeSpan startTime, TimeSpan endTime)
         {
-            //if (phoneNumber is null)
-            //    return RedirectToAction("GetProcedures");
-
             try
             {
                 await scheduleRepo.InsertNewSchedule(new DoctorsSchedule
@@ -63,17 +60,11 @@ namespace DotNetData_Lb3.Controllers
             } catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
-                HttpContext.Session.SetString("ErrorMessage", ex.Message);
-                //foreach (var el in TempData)
-                //{
-                //    Console.WriteLine("InsertSchedules action " + el.Value);
-                //}
-                //List<Patient> patients = await patientsRepo.GetPatients();
-                //List<Doctor> doctors = doctorsRepo.GetDoctors();
-                //ViewBag.Doctors = doctors;
-                //ViewBag.Patients = patients;
-                //return View("Procedures");
-                return RedirectToAction("GetProcedures");
+                List<Patient> patients = await patientsRepo.GetPatients();
+                List<Doctor> doctors = await doctorsRepo.GetDoctors();
+                ViewBag.Doctors = doctors;
+                ViewBag.Patients = patients;
+                return View("Procedures");
             }
         }
 
@@ -82,7 +73,7 @@ namespace DotNetData_Lb3.Controllers
         {
             List<TopEarningDoctor> topEarningDoctors = await functionsRepo.GetTopEarningDoctors(date);
             List<Patient> patients = await patientsRepo.GetPatients();
-            List<Doctor> doctors = doctorsRepo.GetDoctors();
+            List<Doctor> doctors = await doctorsRepo.GetDoctors();
             ViewBag.Doctors = doctors;
             ViewBag.Patients = patients;
             ViewData["TopEarningDoctors"] = topEarningDoctors;
@@ -97,7 +88,7 @@ namespace DotNetData_Lb3.Controllers
 
             List<SpentByPatient> spent = await functionsRepo.GetSpentByPatient(phoneNumber);
             List<Patient> patients = await patientsRepo.GetPatients();
-            List<Doctor> doctors = doctorsRepo.GetDoctors();
+            List<Doctor> doctors = await doctorsRepo.GetDoctors();
             ViewBag.Doctors = doctors;
             ViewBag.Patients = patients;
             ViewData["SpentByPatient"] = spent;
@@ -109,7 +100,7 @@ namespace DotNetData_Lb3.Controllers
             int StartPosition, int LengthToRemove)
         {
             List<Patient> patients = await patientsRepo.GetPatients();
-            List<Doctor> doctors = doctorsRepo.GetDoctors();
+            List<Doctor> doctors = await doctorsRepo.GetDoctors();
             ViewBag.Doctors = doctors;
             ViewBag.Patients = patients;
             string? res = await functionsRepo.RemoveSubstring(InputString, StartPosition, LengthToRemove);
