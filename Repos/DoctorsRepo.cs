@@ -48,7 +48,9 @@ namespace DotNetData_Lb3.Repos
 
         public async Task<bool> InsertNewDoctor(Doctor d)
         {
-            return false;
+           
+            await context.Doctors.AddAsync(d);
+            return await context.SaveChangesAsync() > 0;
             //using (SqlConnection connection = new(connectionString))
             //{
             //    string sqlQuery = "INSERT INTO doctors VALUES(@first_name, @last_name, @phone_number, @speciality)";

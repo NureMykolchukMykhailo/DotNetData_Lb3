@@ -27,7 +27,7 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpPost("appointments/add")]
-        public async Task<IActionResult> InsertAppointment([FromForm] AppointmentAdding a)
+        public async Task<IActionResult> InsertAppointment([FromForm] Appointment a)
         {
             await appointmentsRepo.InsertNewAppointment(a);
             return RedirectToAction("GetAppointments");

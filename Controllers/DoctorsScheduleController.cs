@@ -35,28 +35,17 @@ namespace DotNetData_Lb3.Controllers
             ViewBag.Doctors = doctors;
             ViewBag.Patients = patients;
 
-            string value = HttpContext.Session.GetString("ErrorMessage");
-            Console.WriteLine(value);
             return View("Procedures");
         }
 
         [HttpPost("schedules/add")]
-        public async Task<IActionResult> InsertSchedules([FromForm] int doctorId, 
-            string dayOfWeek, TimeSpan startTime, TimeSpan endTime)
+        public async Task<IActionResult> InsertSchedules([FromForm] DoctorsSchedule ds)
         {
             try
             {
-                await scheduleRepo.InsertNewSchedule(new DoctorsSchedule
-                {
-                    DayOfWeek = dayOfWeek,
-                    StartTime = startTime,
-                    EndTime = endTime,
-                    Doctor = new Doctor
-                    {
-                        DoctorId = doctorId
-                    }
-                });
+                await scheduleRepo.InsertNewSchedule(ds);
                 return RedirectToAction("GetSchedules");
+
             } catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
@@ -71,7 +60,7 @@ namespace DotNetData_Lb3.Controllers
         [HttpPost("procedures/topEarningDoctor")]
         public async Task<IActionResult> FindTopEarningDoctor([FromForm] DateTime date)
         {
-            List<TopEarningDoctor> topEarningDoctors = await functionsRepo.GetTopEarningDoctors(date);
+            List<TopEarningDoctor> topEarningDoctors = functionsRepo.GetTopEarningDoctors(date);
             List<Patient> patients = await patientsRepo.GetPatients();
             List<Doctor> doctors = await doctorsRepo.GetDoctors();
             ViewBag.Doctors = doctors;

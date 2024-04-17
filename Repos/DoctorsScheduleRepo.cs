@@ -16,6 +16,7 @@ namespace DotNetData_Lb3.Repos
         public async Task<List<DoctorsSchedule>> GetDoctorsSchedules()
         {
             return await context.Schedules.Include(s => s.Doctor).ToListAsync();
+
             //List<DoctorsSchedule> doctorsSchedules = new();
 
             //using (SqlConnection connection = new(connectionString))
@@ -57,7 +58,18 @@ namespace DotNetData_Lb3.Repos
 
         public async Task<bool> InsertNewSchedule(DoctorsSchedule ds)
         {
-            return false;
+            try
+            {
+                int rowsAffected = await context.Database
+                    .ExecuteSqlInterpolatedAsync($"EXEC UpdateDoctorSchedule {ds.DoctorId}, {ds.DayOfWeek}, {ds.StartTime}, {ds.EndTime}");
+                return rowsAffected > 0;
+
+            } catch
+            {
+                throw;
+            }
+            
+
             //using (SqlConnection connection = new (connectionString))
             //{
             //    SqlCommand command = new("UpdateDoctorSchedule", connection)

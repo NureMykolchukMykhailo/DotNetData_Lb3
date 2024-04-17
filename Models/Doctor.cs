@@ -29,17 +29,25 @@ namespace DotNetData_Lb3.Models
 
     public class TopEarningDoctor
     {
+        [Column("doctor_id")]
         public int DoctorId { get; set; }
+        [Column("first_name")]
         public string FirstName { get; set; }
+        [Column("last_name")]
         public string LastName { get; set; }
-        public double TotalEarnins { get; set; }
+        [Column("total_earnings")]
+        public decimal TotalEarnins { get; set; }
     }
 
     public class SpentByPatient
     {
+        [Column("doctor_id")]
         public int DoctorId { get; set; }
+        [Column("doctor_name")]
         public string DoctorName { get; set; }
+        [Column("speciality")]
         public string Speciality { get; set; }
-        public double TotalSpent { get; set; }
+        [Column("total_spent")]
+        public decimal TotalSpent { get; set; }
     }
 }

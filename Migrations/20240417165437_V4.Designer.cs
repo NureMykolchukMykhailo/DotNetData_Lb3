@@ -4,6 +4,7 @@ using DotNetData_Lb3.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetData_Lb3.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240417165437_V4")]
+    partial class V4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,22 +188,18 @@ namespace DotNetData_Lb3.Migrations
             modelBuilder.Entity("DotNetData_Lb3.Models.TopEarningDoctor", b =>
                 {
                     b.Property<int>("DoctorId")
-                        .HasColumnType("int")
-                        .HasColumnName("doctor_id");
+                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("first_name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("last_name");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalEarnins")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("total_earnins");
+                    b.Property<double>("TotalEarnins")
+                        .HasColumnType("float");
 
                     b.ToView("TopEarningDoctorView");
                 });

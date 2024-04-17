@@ -64,9 +64,10 @@ namespace DotNetData_Lb3.Repos
             //return appointments;
         }
 
-        public async Task<bool> InsertNewAppointment(AppointmentAdding a)
+        public async Task<bool> InsertNewAppointment(Appointment a)
         {
-            return false;
+            await context.Appointments.AddAsync(a);
+            return await context.SaveChangesAsync() > 0;
             //using (SqlConnection connection = new(connectionString))
             //{
             //    string sqlQuery = "INSERT INTO appointments VALUES " +
