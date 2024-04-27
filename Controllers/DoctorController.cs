@@ -14,17 +14,18 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpGet("doctors")]
-        public async Task<IActionResult> GetDoctors()
+        public async Task<IActionResult> GetDoctors(List<string>? specialties = null, List<string>? daysOfWeek = null)
         {
-            List<Doctor> doctors = await doctorsRepo.GetDoctors();
+            List<Doctor> doctors = await doctorsRepo.GetDoctors(specialties, daysOfWeek);
             return View("Doctors", doctors);
         }
 
-        [HttpPost("doctors/add")]
-        public async Task<IActionResult> InsertDoctor([FromForm] Doctor d)
-        {
-            await doctorsRepo.InsertNewDoctor(d);
-            return RedirectToAction("GetDoctors");
-        }
+
+        //[HttpPost("doctors/add")]
+        //public async Task<IActionResult> InsertDoctor([FromForm] Doctor d)
+        //{
+        //    await doctorsRepo.InsertNewDoctor(d);
+        //    return RedirectToAction("GetDoctors");
+        //}
     }
 }

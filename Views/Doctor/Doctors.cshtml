@@ -2,24 +2,52 @@
 
 <partial name="NewDoctorAdding" />
 
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Имя</th>
-            <th scope="col">Фамилия</th>
-            <th scope="col">Номер телефона</th>
-            <th scope="col">Специальность</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var doctor in Model)
-        {
-            <tr>
-                <td>@doctor.FirstName</td>
-                <td>@doctor.LastName</td>
-                <td>@doctor.PhoneNumber</td>
-                <td>@doctor.Speciality</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<partial name="DoctorsFiltering" />
+
+
+@foreach (var doctor in Model)
+{
+    <div class="doctor-block">
+        <div class="doctor-info">
+            <h4>@doctor.FirstName @doctor.LastName</h4>
+            <p>Номер телефона: @doctor.PhoneNumber</p>
+            <p>Специальность: @doctor.Speciality</p>
+            <button class="toggle-schedule-btn">Показать расписание</button>
+        </div>
+        <div class="schedule-table" style="display: none;">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">День недели</th>
+                        <th scope="col">Начало работы</th>
+                        <th scope="col">Конец работы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (doctor.Schedule is not null)
+                    {
+                        foreach (var schedule in doctor.Schedule)
+                        {
+                            <tr>
+                                <td>@schedule.DayOfWeek</td>
+                                <td>@schedule.StartTime.ToShortTimeString()</td>
+                                <td>@schedule.EndTime.ToShortTimeString()</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.toggle-schedule-btn').click(function() {
+                $(this).closest('.doctor-block').find('.schedule-table').slideToggle(100);
+            });
+        });
+    </script>
+}
+

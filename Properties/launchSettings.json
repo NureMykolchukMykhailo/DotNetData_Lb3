@@ -15,7 +15,8 @@
       "applicationUrl": "https://localhost:7107;http://localhost:5107",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DbConnection": "Data Source=DESKTOP-LPAA90C;Initial Catalog=lb1;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+        "DbConnection": "Data Source=DESKTOP-LPAA90C;Initial Catalog=lb1;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+        "Mongo": "mongodb://localhost:27017"
       }
     },
     "IIS Express": {

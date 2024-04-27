@@ -1,72 +1,41 @@
 ﻿using DotNetData_Lb3.Models;
-using System.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace DotNetData_Lb3.Repos
 {
     public class DoctorsRepo
     {
-        DatabaseContext context;
-        public DoctorsRepo(DatabaseContext _context)
+        private readonly IMongoCollection<Doctor> collection;
+
+        public DoctorsRepo()
         {
-            context = _context;
+            var connString = Environment.GetEnvironmentVariable("Mongo");
+            collection = new MongoClient(connString)
+                .GetDatabase("hospital")
+                .GetCollection<Doctor>("doctors");
         }
 
-        public async Task<List<Doctor>> GetDoctors()
+        public async Task<List<Doctor>> GetDoctors(List<string>? specialties = null, List<string>? daysOfWeek = null)
         {
-            return await context.Doctors.ToListAsync();
+            var filters = new List<FilterDefinition<Doctor>>();
 
-            //List<Doctor> doctors = new();
+            if (specialties is not null && specialties.Any())
+                filters.Add(Builders<Doctor>.Filter.In(d => d.Speciality, specialties));
+            
+            if (daysOfWeek is not null && daysOfWeek.Any())
+                filters.Add(Builders<Doctor>.Filter.AnyIn(d => d.Schedule.Select(schedule => schedule.DayOfWeek), daysOfWeek));
+            
 
-            //using (SqlConnection connection = new(connectionString))
-            //{
-            //    string sqlQuery = "SELECT doctor_id, first_name, last_name, phone_number, speciality FROM doctors";
-            //    SqlCommand command = new(sqlQuery, connection);
+            var combinedFilter = filters.Any() ? Builders<Doctor>.Filter.And(filters) : Builders<Doctor>.Filter.Empty;
 
-            //    connection.Open();
-            //    SqlDataReader reader = command.ExecuteReader();
-
-            //    while (reader.Read())
-            //    {
-            //        Doctor doctor = new Doctor
-            //        {
-            //            DoctorId = Convert.ToInt32(reader["doctor_id"]),
-            //            FirstName = reader["first_name"].ToString(),
-            //            LastName = reader["last_name"].ToString(),
-            //            PhoneNumber = reader["phone_number"].ToString(),
-            //            Speciality = reader["speciality"].ToString()
-            //        };
-
-            //        doctors.Add(doctor);
-            //    }
-
-            //    reader.Close();
-            //}
-
-            //return doctors;
+            return await (await collection.FindAsync(combinedFilter)).ToListAsync();
         }
 
-        public async Task<bool> InsertNewDoctor(Doctor d)
-        {
-           
-            await context.Doctors.AddAsync(d);
-            return await context.SaveChangesAsync() > 0;
-            //using (SqlConnection connection = new(connectionString))
-            //{
-            //    string sqlQuery = "INSERT INTO doctors VALUES(@first_name, @last_name, @phone_number, @speciality)";
-
-            //    SqlCommand command = new SqlCommand(sqlQuery, connection);
-
-            //    command.Parameters.AddWithValue("@first_name", d.FirstName);
-            //    command.Parameters.AddWithValue("@last_name", d.LastName);
-            //    command.Parameters.AddWithValue("@phone_number", d.PhoneNumber);
-            //    command.Parameters.AddWithValue("@speciality", d.Speciality);
-
-            //    await connection.OpenAsync();
-            //    int rowsAffected = await command.ExecuteNonQueryAsync();
-
-            //    return rowsAffected > 0;
-            //}
-        }
+        //public async Task<bool> InsertNewDoctor(Doctor d)
+        //{
+        //    await context.Doctors.AddAsync(d);
+        //    return await context.SaveChangesAsync() > 0;
+        //}
     }
 }

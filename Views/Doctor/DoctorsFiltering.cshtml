@@ -1,0 +1,23 @@
+﻿@{
+}
+
+<form asp-action="GetDoctors" asp-controller="Doctor" method="get">
+    <h3>Фильтр докторов</h3>
+    <div class="filter-section">
+        <h4>Специальности:</h4>
+        <label><input type="checkbox" name="specialties" value="терапевт"> Терапевт</label>
+        <label><input type="checkbox" name="specialties" value="хирург"> Хирург</label>
+        <label><input type="checkbox" name="specialties" value="офтальмолог"> Офтальмолог</label>
+    </div>
+    <div class="filter-section">
+        <h4>Рабочие дни:</h4>
+        <label><input type="checkbox" name="daysOfWeek" value="Понеділок"> Понеділок</label>
+        <label><input type="checkbox" name="daysOfWeek" value="Вівторок"> Вівторок</label>
+        <label><input type="checkbox" name="daysOfWeek" value="Середа"> Середа</label>
+        <label><input type="checkbox" name="daysOfWeek" value="Четвер"> Четвер</label>
+        <label><input type="checkbox" name="daysOfWeek" value="П'ятниця"> П'ятниця</label>
+        <label><input type="checkbox" name="daysOfWeek" value="Субота"> Субота</label>
+        <label><input type="checkbox" name="daysOfWeek" value="Неділя"> Неділя</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Применить фильтр</button>
+</form>
