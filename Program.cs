@@ -20,6 +20,10 @@ namespace DotNetData_Lb3
             builder.Services.AddScoped<DoctorsScheduleRepo>();
             builder.Services.AddScoped<FunctionsRepo>();
 
+            builder.Services.BuildServiceProvider()
+                .GetRequiredService<DoctorsRepo>()
+                .CreateIndexes();
+
             builder.Services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
@@ -31,7 +35,7 @@ namespace DotNetData_Lb3
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                
+
                 app.UseHsts();
             }
             app.UseSession();

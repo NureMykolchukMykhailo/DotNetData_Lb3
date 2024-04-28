@@ -1,15 +1,17 @@
 ﻿@{
+
 }
 
-<form asp-action="GetDoctors" asp-controller="Doctor" method="get">
-    <h3>Фильтр докторов</h3>
-    <div class="filter-section">
+<form class="filteringForm" asp-action="GetDoctors" asp-controller="Doctor" method="get">
+
+    <div class="filter-section filteringElement">
         <h4>Специальности:</h4>
-        <label><input type="checkbox" name="specialties" value="терапевт"> Терапевт</label>
-        <label><input type="checkbox" name="specialties" value="хирург"> Хирург</label>
-        <label><input type="checkbox" name="specialties" value="офтальмолог"> Офтальмолог</label>
+        @foreach(string el in ViewBag.Specialties)
+        {
+           <label><input type="checkbox" name="specialties" value="@el">@el</label> 
+        }
     </div>
-    <div class="filter-section">
+    <div class="filter-section filteringElement">
         <h4>Рабочие дни:</h4>
         <label><input type="checkbox" name="daysOfWeek" value="Понеділок"> Понеділок</label>
         <label><input type="checkbox" name="daysOfWeek" value="Вівторок"> Вівторок</label>

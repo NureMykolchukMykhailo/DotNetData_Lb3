@@ -1,45 +1,85 @@
 ﻿@model List<Doctor>
 
-<partial name="NewDoctorAdding" />
-
-<partial name="DoctorsFiltering" />
-
-
-@foreach (var doctor in Model)
+@if (TempData.ContainsKey("Exeption"))
 {
-    <div class="doctor-block">
-        <div class="doctor-info">
-            <h4>@doctor.FirstName @doctor.LastName</h4>
-            <p>Номер телефона: @doctor.PhoneNumber</p>
-            <p>Специальность: @doctor.Speciality</p>
-            <button class="toggle-schedule-btn">Показать расписание</button>
-        </div>
-        <div class="schedule-table" style="display: none;">
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">День недели</th>
-                        <th scope="col">Начало работы</th>
-                        <th scope="col">Конец работы</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (doctor.Schedule is not null)
-                    {
-                        foreach (var schedule in doctor.Schedule)
-                        {
-                            <tr>
-                                <td>@schedule.DayOfWeek</td>
-                                <td>@schedule.StartTime.ToShortTimeString()</td>
-                                <td>@schedule.EndTime.ToShortTimeString()</td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
+    <div class="alert alert-danger" role="alert">
+        @TempData["Exeption"]
     </div>
 }
+
+<div class="contentWrapper">
+
+    <partial name="DoctorsFiltering" />
+
+    <div class="mainDoctorBlock">
+
+        <partial name="NewDoctorAdding" />
+
+        @foreach (var doctor in Model)
+        {
+            <div class="doctor-block">
+
+                <div class="doctor-info">
+                    <h4 style="margin: 0; width: 30%">@doctor.FirstName @doctor.LastName</h4>
+                    <p style="margin: 0; width: 30%">@doctor.PhoneNumber</p>
+                    <p style="margin: 0; width: 30%">@doctor.Speciality</p>
+                    <button class="toggle-schedule-btn">>></button>
+                    <form asp-action="DelDoctor" asp-controller="Doctor" method="post">
+                        <input type="hidden" name="phoneNumber" value="@doctor.PhoneNumber" />
+                        <button type="submit" class="toggle-schedule-btn">delete</button>
+                    </form>
+                </div>
+
+                <div class="schedule-table" style="display: none;">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">День недели</th>
+                                <th scope="col">Начало работы</th>
+                                <th scope="col">Конец работы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (doctor.Schedule is not null)
+                            {
+                                foreach (var schedule in doctor.Schedule)
+                                {
+                                    <tr>
+                                        <td>@schedule.DayOfWeek</td>
+                                        <td>@schedule.StartTime.ToShortTimeString()</td>
+                                        <td>@schedule.EndTime.ToShortTimeString()</td>
+                                    </tr>
+                                }
+                            }
+                            <form asp-action="UpdateDoctorSchedule" asp-controller="Doctor" method="post">
+                                <input type="hidden" name="phoneNumber" value="@doctor.PhoneNumber">
+                            <tr>
+                                <td>
+                                    <select class="form-control" name="DayOfWeek">
+                                        <option value="Понеділок">Понеділок</option>
+                                        <option value="Вівторок">Вівторок</option>
+                                        <option value="Середа">Середа</option>
+                                        <option value="Четвер">Четвер</option>
+                                        <option value="П'ятниця">П'ятниця</option>
+                                        <option value="Субота">Субота</option>
+                                        <option value="Неділя">Неділя</option>
+                                    </select>
+                                </td>
+                                <td><input type="time" class="form-control" name="StartTime"></td>
+                                <td><input type="time" class="form-control" name="EndTime"></td>
+                            </tr>
+                            <button type="submit">add</button>
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+
 
 @section Scripts {
     <script>
