@@ -73,3 +73,26 @@ body {
     margin-right: 10px;
     width: 40%;
 }
+
+
+
+
+
+
+.range-slider {
+    display: flex;
+    align-items: center;
+}
+
+    .range-slider label {
+        margin-right: 10px;
+    }
+
+    .range-slider input[type="range"] {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .range-slider span {
+        width: 30px;
+    }

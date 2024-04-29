@@ -1,5 +1,21 @@
 ﻿@model List<Patient>
 
+<form asp-action="SearchPatient" asp-controller="Patients" method="post">
+    <input type="text" name="name"/>
+    <button type="submit" class="btn btn-primary">search</button>
+</form>
+
+<div class="range-slider">
+  <label for="minAge">Минимальный возраст:</label>
+  <input type="range" id="minAge" name="minAge" min="0" max="100" value="0" step="1">
+  <span id="minAgeLabel">0</span>
+
+  <label for="maxAge">Максимальный возраст:</label>
+  <input type="range" id="maxAge" name="maxAge" min="0" max="100" value="100" step="1">
+  <span id="maxAgeLabel">100</span>
+</div>
+
+
 <partial name="NewPatientAdding" />
 
 <table class="table">

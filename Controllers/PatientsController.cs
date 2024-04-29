@@ -25,5 +25,27 @@ namespace DotNetData_Lb3.Controllers
             await patientsRepo.InsertNewPatient(p);
             return RedirectToAction("GetPatients");
         }
+
+        [HttpPost("patients/del")]
+        public async Task<IActionResult> DelPatient([FromForm] string phoneNumber)
+        {
+            await patientsRepo.DeletePatient(phoneNumber);
+            return RedirectToAction("GetPatients");
+        }
+
+        [HttpPost("patients/updatePatient")]
+        public async Task<IActionResult> UpdatePatient(string patientId, Patient p)
+        {
+            await patientsRepo.UpdatePatient(patientId, p);
+
+            return RedirectToAction("GetPatients");
+        }
+
+        [HttpPost("patients/search")]
+        public async Task<IActionResult> SearchPatient(string name)
+        {
+            List<Patient> patients = await patientsRepo.SearchPatientsByName(name);
+            return View("Patients", patients);
+        }
     }
 }

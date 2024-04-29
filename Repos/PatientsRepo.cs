@@ -1,71 +1,84 @@
 ﻿using DotNetData_Lb3.Models;
-using System.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace DotNetData_Lb3.Repos
 {
     public class PatientsRepo
     {
-        DatabaseContext context;
+        private readonly IMongoCollection<Patient> collection;
 
-        public PatientsRepo(DatabaseContext context)
+        public PatientsRepo()
         {
-            this.context = context;
+            var connString = Environment.GetEnvironmentVariable("Mongo");
+            collection = new MongoClient(connString)
+                .GetDatabase("hospital")
+                .GetCollection<Patient>("patients");
         }
 
         public async Task<List<Patient>> GetPatients()
         {
-            return await context.Patients.ToListAsync();
-            //List<Patient> patients = new();
-
-            //using (SqlConnection connection = new(connectionString))
-            //{
-            //    string sqlQuery = "SELECT patient_id, first_name, last_name, phone_number, age FROM patients";
-            //    SqlCommand command = new(sqlQuery, connection);
-
-            //    await connection.OpenAsync();
-            //    SqlDataReader reader = await command.ExecuteReaderAsync();
-
-            //    while (await reader.ReadAsync())
-            //    {
-            //        Patient patient = new Patient
-            //        {
-            //            PatientId = Convert.ToInt32(reader["patient_id"]),
-            //            FirstName = reader["first_name"].ToString(),
-            //            LastName = reader["last_name"].ToString(),
-            //            PhoneNumber = reader["phone_number"].ToString(),
-            //            Age = reader["age"].ToString()
-            //        };
-
-            //        patients.Add(patient);
-            //    }
-
-            //    await reader.CloseAsync();
-            //}
-
-            //return patients;
+            return await (await collection.FindAsync(x => true)).ToListAsync();
         }
 
-        public async Task<bool> InsertNewPatient(Patient p)
+        public async Task InsertNewPatient(Patient p)
         {
-            await context.Patients.AddAsync(p);
-            return await context.SaveChangesAsync() > 0;
-            //using (SqlConnection connection = new(connectionString))
-            //{
-            //    string sqlQuery = "INSERT INTO patients VALUES(@first_name, @last_name, @age, @phone_number)";
+            try
+            {
+                await collection.InsertOneAsync(p);
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
-            //    SqlCommand command = new SqlCommand(sqlQuery, connection);
+        public async Task DeletePatient(string phoneNumber)
+        {
+            await collection.DeleteOneAsync(p => p.PhoneNumber == phoneNumber);
+        }
 
-            //    command.Parameters.AddWithValue("@first_name", p.FirstName);
-            //    command.Parameters.AddWithValue("@last_name", p.LastName);
-            //    command.Parameters.AddWithValue("@phone_number", p.PhoneNumber);
-            //    command.Parameters.AddWithValue("@age", p.Age);
+        public async Task UpdatePatient(string id, Patient patient)
+        {
+            var update = Builders<Patient>.Update
+                .Set(p => p.FirstName, patient.FirstName)
+                .Set(p => p.LastName, patient.LastName)
+                .Set(p => p.PhoneNumber, patient.PhoneNumber)
+                .Set(p => p.Age, patient.Age);
 
-            //    await connection.OpenAsync();
-            //    int rowsAffected = await command.ExecuteNonQueryAsync();
+            await collection.UpdateOneAsync(d => d.PatientId == new ObjectId(id), update);
+        }
 
-            //    return rowsAffected > 0;
-            //}
+        public async Task<List<Patient>> SearchPatientsByName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return await GetPatients();
+
+            var filter = Builders<Patient>.Filter.Or(
+            Builders<Patient>.Filter.Regex(p => p.FirstName, new BsonRegularExpression(name, "i")),
+            Builders<Patient>.Filter.Regex(p => p.LastName, new BsonRegularExpression(name, "i"))
+            );
+
+            return await collection.Find(filter).ToListAsync();
+        }
+
+        public async void CreateIndexes()
+        {
+            var indexOptions = new CreateIndexOptions()
+            {
+                Unique = true
+            };
+            var indexKeys = Builders<Patient>.IndexKeys.Ascending(p => p.PhoneNumber);
+            var indexModel = new CreateIndexModel<Patient>(indexKeys, indexOptions);
+            await collection.Indexes.CreateOneAsync(indexModel);
+        }
+
+        public async Task<(int, int)> GetPatientAgeBoundaries()
+        {
+            return new List<int>()
+            {
+                await collection.
+            };
         }
     }
 }
