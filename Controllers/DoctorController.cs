@@ -1,6 +1,7 @@
 ﻿using DotNetData_Lb3.Repos;
 using Microsoft.AspNetCore.Mvc;
 using DotNetData_Lb3.Models;
+using MongoDB.Bson;
 
 namespace DotNetData_Lb3.Controllers
 {
@@ -54,5 +55,29 @@ namespace DotNetData_Lb3.Controllers
             return RedirectToAction("GetDoctors");
         }
 
+        [HttpPost("doctor/deleteSchedule")]
+        public async Task<IActionResult> DeleteDoctorSchedule(string phoneNumber, Schedule s)
+        {
+
+            await doctorsRepo.DeleteDoctorSchedule(phoneNumber, s);
+
+            return RedirectToAction("GetDoctors");
+        }
+
+        [HttpPost("doctor/updateDoctor")]
+        public async Task<IActionResult> UpdateDoctor(string doctorId, Doctor d)
+        {
+            await doctorsRepo.UpdateDoctor(doctorId, d);
+
+            return RedirectToAction("GetDoctors");
+        }
+
+        [HttpPost("doctor/search")]
+        public async Task<IActionResult> SearchDoctor(string name)
+        {
+            List<Doctor> doctors = await doctorsRepo.SearchDoctorsByName(name);
+            ViewBag.Specialties = await doctorsRepo.GetDoctorsSpecialties();
+            return View("Doctors", doctors);
+        }
     }
 }

@@ -56,8 +56,45 @@ namespace DotNetData_Lb3.Repos
 
         public async Task UpdateDoctorSchedule(string phoneNumber, Schedule s)
         {
+            s.StartTime = s.StartTime.AddHours(3);
+            s.EndTime = s.EndTime.AddHours(3);
             var update = Builders<Doctor>.Update.Push(d => d.Schedule, s);
             await collection.UpdateOneAsync(d => d.PhoneNumber == phoneNumber, update);
+        }
+
+        public async Task UpdateDoctor(string id, Doctor doctor)
+        {
+            var update = Builders<Doctor>.Update
+                .Set(d => d.FirstName, doctor.FirstName)
+                .Set(d => d.LastName, doctor.LastName)
+                .Set(d => d.PhoneNumber, doctor.PhoneNumber)
+                .Set(d => d.Speciality, doctor.Speciality);
+
+            await collection.UpdateOneAsync(d => d.DoctorId == new ObjectId(id), update);
+        }
+
+        public async Task<List<Doctor>> SearchDoctorsByName(string name)
+        {
+            if(string.IsNullOrEmpty(name))
+                return await GetDoctors();
+
+            var filter = Builders<Doctor>.Filter.Or(
+            Builders<Doctor>.Filter.Regex(d => d.FirstName, new BsonRegularExpression(name, "i")),
+            Builders<Doctor>.Filter.Regex(d => d.LastName, new BsonRegularExpression(name, "i"))
+            );
+
+            return await collection.Find(filter).ToListAsync();
+
+            //var filter = Builders<Doctor>.Filter.Regex(d => d.FirstName , new BsonRegularExpression(name, "i"));
+
+            //return await collection.Find(filter).ToListAsync();
+        }
+
+        public async Task DeleteDoctorSchedule(string phoneNumber, Schedule scheduleToDelete)
+        {
+            var update = Builders<Doctor>.Update.PullFilter(d => d.Schedule, s => s.DayOfWeek == scheduleToDelete.DayOfWeek);
+            await collection.FindOneAndUpdateAsync(new ExpressionFilterDefinition<Doctor>(d => d.PhoneNumber == phoneNumber), update);
+
         }
 
         public async void CreateIndexes()

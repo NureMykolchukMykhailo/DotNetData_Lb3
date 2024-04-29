@@ -7,13 +7,22 @@
     </div>
 }
 
+<form asp-action="SearchDoctor" asp-controller="Doctor" method="post">
+    <input type="text" name="name"/>
+    <button type="submit" class="btn btn-primary">search</button>
+</form>
+
 <div class="contentWrapper">
 
     <partial name="DoctorsFiltering" />
 
     <div class="mainDoctorBlock">
 
-        <partial name="NewDoctorAdding" />
+        <div class="adding-updating-forms">
+            <partial name="NewDoctorAdding" />
+
+            <partial name="DoctorUpdating" />
+        </div>
 
         @foreach (var doctor in Model)
         {
@@ -44,11 +53,18 @@
                             {
                                 foreach (var schedule in doctor.Schedule)
                                 {
+                                    <form asp-action="DeleteDoctorSchedule" asp-controller="Doctor" method="post">
+                                        <input type="hidden" name="phoneNumber" value="@doctor.PhoneNumber">
+                                        <input type="hidden" name="DayOfWeek" value="@schedule.DayOfWeek">
+                                        <input type="hidden" name="StartTime" value="@schedule.StartTime">
+                                        <input type="hidden" name="EndTime" value="@schedule.EndTime">
                                     <tr>
                                         <td>@schedule.DayOfWeek</td>
                                         <td>@schedule.StartTime.ToShortTimeString()</td>
                                         <td>@schedule.EndTime.ToShortTimeString()</td>
+                                        <td><button type="submit">del</button></td>
                                     </tr>
+                                    </form>
                                 }
                             }
                             <form asp-action="UpdateDoctorSchedule" asp-controller="Doctor" method="post">
@@ -67,8 +83,8 @@
                                 </td>
                                 <td><input type="time" class="form-control" name="StartTime"></td>
                                 <td><input type="time" class="form-control" name="EndTime"></td>
+                                <td><button type="submit">add</button></td>
                             </tr>
-                            <button type="submit">add</button>
                             </form>
                         </tbody>
                     </table>

@@ -1,5 +1,16 @@
-﻿
-<form class="addingForm" asp-action="InsertDoctor" asp-controller="Doctor" method="post">
+﻿@model List<Doctor>
+
+<form class="updatingForm" asp-action="UpdateDoctor" asp-controller="Doctor" method="post">
+     <div class="form-group">
+        <label for="doctorId">Доктор:</label>
+        <select class="form-control" id="doctorId" name="doctorId">
+            <option value="">Выберите доктора</option>
+            @foreach (var doctor in Model)
+            {
+                <option value="@doctor.DoctorId.ToString()">@doctor.ToString()</option>
+            }
+        </select>
+    </div>
     <div class="form-group">
         <label for="firstName">Имя:</label>
         <input type="text" class="form-control" id="firstName" name="FirstName">
@@ -16,6 +27,5 @@
         <label for="speciality">Специальность:</label>
         <input type="text" class="form-control" id="speciality" name="Speciality">
     </div>
-    <button type="submit" class="btn btn-primary">Добавить</button>
+    <button type="submit" class="btn btn-primary">Изменить</button>
 </form>
-
