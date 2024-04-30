@@ -1,6 +1,9 @@
 ﻿using DotNetData_Lb3.Repos;
 using Microsoft.AspNetCore.Mvc;
 using DotNetData_Lb3.Models;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
 
 namespace DotNetData_Lb3.Controllers
 {
@@ -18,9 +21,10 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpGet("appointments")]
-        public async Task<IActionResult> GetAppointments()
+        public async Task<IActionResult> GetAppointments(List<string>? appointmentTypes = null,
+            List<ObjectId>? doctors = null, List<ObjectId>? patients = null)
         {
-            List<Appointment> appointments = await appointmentsRepo.GetAppointments();
+            List<Appointment> appointments = await appointmentsRepo.GetAppointments(appointmentTypes, doctors, patients);
             ViewBag.Doctors = await doctorsRepo.GetDoctors();
             ViewBag.Patients = await patientsRepo.GetPatients();
             return View("Appointments", appointments);
@@ -30,6 +34,21 @@ namespace DotNetData_Lb3.Controllers
         public async Task<IActionResult> InsertAppointment([FromForm] Appointment a)
         {
             await appointmentsRepo.InsertNewAppointment(a);
+            return RedirectToAction("GetAppointments");
+        }
+
+        [HttpPost("appointments/del")]
+        public async Task<IActionResult> DelAppointment([FromForm] string id)
+        {
+            await appointmentsRepo.DeleteAppointment(id);
+            return RedirectToAction("GetAppointments");
+        }
+
+        [HttpPost("appointments/update")]
+        public async Task<IActionResult> UpdateAppointment(string id, Appointment a)
+        {
+            await appointmentsRepo.UpdateAppointment(id, a);
+
             return RedirectToAction("GetAppointments");
         }
     }

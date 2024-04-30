@@ -32,6 +32,11 @@ namespace DotNetData_Lb3.Repos
             return await (await collection.FindAsync(combinedFilter)).ToListAsync();
         }
 
+        public async Task<Doctor> GetDoctorById(string id)
+        {
+            return await (await collection.FindAsync(d => d.DoctorId == new ObjectId(id))).FirstOrDefaultAsync();
+        }
+
         public async Task<List<string>> GetDoctorsSpecialties()
         {
             return await (await collection.DistinctAsync(d => d.Speciality, new BsonDocument())).ToListAsync();

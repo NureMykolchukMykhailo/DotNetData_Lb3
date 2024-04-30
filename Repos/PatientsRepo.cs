@@ -43,6 +43,11 @@ namespace DotNetData_Lb3.Repos
             await collection.DeleteOneAsync(p => p.PhoneNumber == phoneNumber);
         }
 
+        public async Task<Patient> GetPatientById(string id)
+        {
+            return await (await collection.FindAsync(p => p.PatientId == new ObjectId(id))).FirstOrDefaultAsync();
+        }
+
         public async Task UpdatePatient(string id, Patient patient)
         {
             var update = Builders<Patient>.Update
