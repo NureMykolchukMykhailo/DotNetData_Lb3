@@ -16,9 +16,14 @@ namespace DotNetData_Lb3.Repos
                 .GetCollection<Patient>("patients");
         }
 
-        public async Task<List<Patient>> GetPatients()
+        public async Task<List<Patient>> GetPatients(int? min = null, int? max = null)
         {
-            return await (await collection.FindAsync(x => true)).ToListAsync();
+            if(min is null && max is null)
+                return await (await collection.FindAsync(x => true)).ToListAsync();
+
+            return await (await collection.FindAsync(
+                Builders<Patient>.Filter.Where(p => p.Age <=max && p.Age >= min))
+                ).ToListAsync();
         }
 
         public async Task InsertNewPatient(Patient p)
@@ -73,12 +78,12 @@ namespace DotNetData_Lb3.Repos
             await collection.Indexes.CreateOneAsync(indexModel);
         }
 
-        public async Task<(int, int)> GetPatientAgeBoundaries()
+        public (int, int) GetPatientAgeBoundaries()
         {
-            return new List<int>()
-            {
-                await collection.
-            };
+            int min = Convert.ToInt32(collection.Aggregate().Group(x => 1, gr => new { MinVal = gr.Min(f => f.Age) }).First().MinVal);
+            int max = Convert.ToInt32(collection.Aggregate().Group(x => 1, gr => new { MaxVal = gr.Max(f => f.Age) }).First().MaxVal);
+
+            return (min, max);
         }
     }
 }

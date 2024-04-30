@@ -15,7 +15,7 @@ namespace DotNetData_Lb3.Models
         [BsonElement("phone_number")]
         public string PhoneNumber { get; set; }
         [BsonElement("age")]
-        public string Age { get; set; }
+        public int Age { get; set; }
 
         public override string ToString()
         {

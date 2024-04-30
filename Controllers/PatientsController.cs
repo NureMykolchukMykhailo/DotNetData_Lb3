@@ -13,9 +13,10 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpGet("patients")]
-        public async Task<IActionResult> GetPatients()
+        public async Task<IActionResult> GetPatients(int? min = null, int? max = null)
         {
-            List<Patient> patients = await patientsRepo.GetPatients();
+            List<Patient> patients = await patientsRepo.GetPatients(min, max);
+            ViewBag.AgeBoundaries = patientsRepo.GetPatientAgeBoundaries();
             return View("Patients", patients);
         }
 
@@ -45,6 +46,7 @@ namespace DotNetData_Lb3.Controllers
         public async Task<IActionResult> SearchPatient(string name)
         {
             List<Patient> patients = await patientsRepo.SearchPatientsByName(name);
+            ViewBag.AgeBoundaries = patientsRepo.GetPatientAgeBoundaries();
             return View("Patients", patients);
         }
     }
