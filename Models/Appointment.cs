@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DotNetData_Lb3.Models
 {
-    public class Appointment
+    public class Appointment : BsonDocument
     {
         [BsonId]
         public ObjectId AppointmentId { get; set; }
@@ -17,5 +17,15 @@ namespace DotNetData_Lb3.Models
         public ObjectId DoctorId { get; set; }
         [BsonElement("patient_id")]
         public ObjectId PatientId { get; set; }
+    }
+
+    public class AppointmentFull
+    {
+        public ObjectId AppointmentId { get; set; }
+        public string AppointmentType { get; set; }
+        public DateTime AppointmentDate { get; set; }
+        public decimal AppointmentPrice { get; set; }
+        public Doctor Doctor { get; set; }
+        public Patient Patient { get; set; }
     }
 }
