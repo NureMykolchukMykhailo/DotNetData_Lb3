@@ -1,16 +1,6 @@
-﻿@model List<Appointment>
+﻿@model List<AppointmentFull>
 
 <form asp-action="UpdateAppointment" asp-controller="Appointment" method="post">
-    <div class="form-group">
-        <label >Відвідування:</label>
-        <select class="form-control" name="id">
-            <option value="">Выберите відвідування</option>
-            @foreach (var appointment in Model)
-            {
-                <option value="@appointment.AppointmentId.ToString()">@appointment.ToString()</option>
-            }
-        </select>
-    </div>
     <div class="form-group">
         <label for="appointmentType">Тип посещения:</label>
         <input type="text" class="form-control" id="appointmentType" name="AppointmentType">

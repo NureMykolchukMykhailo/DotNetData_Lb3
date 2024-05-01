@@ -45,29 +45,6 @@ namespace DotNetData_Lb3.Repos
             // это надо будет потом убрать, это для теста
             filters.Clear();
 
-            //var pipeline = new PipelineStageDefinition<BsonDocument, BsonDocument>[]
-            //{
-            //    // Сопоставление доктора
-            //    PipelineStageDefinitionBuilder.Lookup<BsonDocument, Doctor, BsonDocument>(
-            //        foreignCollection: doctorsCollection,
-            //        localField: "doctor_id",
-            //        foreignField: "_id",
-            //        @as: "doctor"
-            //    ),
-
-            //    PipelineStageDefinitionBuilder.Unwind<BsonDocument>("doctor"), // Развертывание доктора, если доктор может быть в нескольких посещениях
-
-            //    // Сопоставление пациента
-            //    PipelineStageDefinitionBuilder.Lookup<BsonDocument, Patient, BsonDocument>(
-            //        foreignCollection: patientsCollection,
-            //        localField: "patient_id",
-            //        foreignField: "_id",
-            //        @as: "patient"
-            //    ),
-
-            //    PipelineStageDefinitionBuilder.Unwind<BsonDocument>("patient"), // Развертывание пациента, если пациент может быть в нескольких посещениях
-
-            //};
 
             BsonDocument pipelineStage = new BsonDocument{
                 {
@@ -99,39 +76,7 @@ namespace DotNetData_Lb3.Repos
             var pipeline = new BsonDocument[] { pipelineStage, pipelineStage2, pipelineStage3, pipelineStage4 };
 
             List<BsonDocument> res = await (await collection.AggregateAsync<BsonDocument>(pipeline)).ToListAsync();
-            BsonDocument temp = res[0];
-
-            //ObjectId AppointmentId = temp["_id"].AsObjectId;
-            //DateTime AppointmentDate = temp["appointment_date"].AsDateTime;
-            //decimal AppointmentPrice = temp["appointment_price"].AsDecimal;
-            //string AppointmentType = temp["appointment_type"].AsString;
-            //Doctor d = new Doctor();
-
-            //ObjectId DoctorId = temp["doctor"]["_id"].AsObjectId;
-            //string FirstName = temp["doctor"]["first_name"].AsString;
-            //string LastName = temp["doctor"]["last_name"].AsString;
-            //string PhoneNumber = temp["doctor"]["phone_number"].AsString;
-            //string Speciality = temp["doctor"]["speciality"].AsString;
-                
-            //Patient p = new Patient();
-
-            //ObjectId PatientId = temp["patient"]["_id"].AsObjectId;
-            //string pFirstName = temp["patient"]["first_name"].AsString;
-            //string pLastName = temp["patient"]["last_name"].AsString;
-            //string pPhoneNumber = temp["patient"]["phone_number"].AsString;
-            //int Age = temp["patient"]["age"].AsInt32;
-
-            //List<AppointmentFull> resultList = new();
-            //foreach(BsonDocument doc in res)
-            //{
-            //    AppointmentFull appointment = new AppointmentFull();
-            //    appointment.AppointmentId = doc["_id"].AsObjectId;
-            //    appointment.AppointmentDate = doc["appointment_date"].AsDateTime;
-            //    appointment.AppointmentPrice = doc["appointment_price"].AsDecimal;
-            //    appointment.AppointmentType = doc["appointment_type"].AsString;
-            //    resultList.Add(appointment);
-
-            //}
+            
 
             List<AppointmentFull> resultList = res.Select(doc => new AppointmentFull
             {

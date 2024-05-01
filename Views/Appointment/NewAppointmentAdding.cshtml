@@ -18,7 +18,7 @@
             <option value="">Выберите доктора</option>
             @foreach (var doctor in ViewBag.Doctors)
             {
-                <option value="@doctor.DoctorId">@doctor.ToString()</option>
+                <option value="@doctor.DoctorId.ToString()">@doctor.ToString()</option>
             }
         </select>
     </div>
@@ -28,7 +28,7 @@
             <option value="">Выберите пациента</option>
             @foreach (var patient in ViewBag.Patients)
             {
-                <option value="@patient.PatientId">@patient.ToString()</option>
+                <option value="@patient.PatientId.ToString()">@patient.ToString()</option>
             }
         </select>
     </div>

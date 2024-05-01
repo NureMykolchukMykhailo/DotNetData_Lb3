@@ -25,7 +25,108 @@
                 <td>@appointment.AppointmentType</td>
                 <td>@appointment.AppointmentPrice</td>
                 <td>@appointment.AppointmentDate.ToString("dd.MM.yyyy")</td>
+                <td><button class="toggle-update-btn">>></button></td>
+                <td>
+                    <form asp-action="DelAppointment" asp-controller="Appointment" method="post">
+                        <input type="hidden" name="id" value="@appointment.AppointmentId.ToString()" />
+                        <button type="submit" class="toggle-schedule-btn">del</button>
+                    </form>
+                </td>
             </tr>
+
+            <tr class="schedule-table" style="display: none;">
+                <td colspan="8">
+                    <form asp-action="UpdateAppointment" asp-controller="Appointment" method="post">
+                        <input type="hidden" name="id" value="@appointment.AppointmentId.ToString()">
+                    <div class="form-group">
+                        <label for="appointmentType">Тип посещения:</label>
+                        <input type="text" class="form-control" id="appointmentType" name="AppointmentType">
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentDate">Дата посещения:</label>
+                        <input type="date" class="form-control" id="appointmentDate" name="AppointmentDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentPrice">Цена посещения:</label>
+                        <input type="number" class="form-control" id="appointmentPrice" name="AppointmentPrice">
+                    </div>
+                    <div class="form-group">
+                        <label for="doctorId">Доктор:</label>
+                        <select class="form-control" id="doctorId" name="DoctorId">
+                            <option value="">Выберите доктора</option>
+                            @foreach (var doctor in ViewBag.Doctors)
+                            {
+                                <option value="@doctor.DoctorId.ToString()">@doctor.ToString()</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientId">Пациент:</label>
+                        <select class="form-control" id="patientId" name="PatientId">
+                            <option value="">Выберите пациента</option>
+                            @foreach (var patient in ViewBag.Patients)
+                            {
+                                <option value="@patient.PatientId.ToString()">@patient.ToString()</option>
+                            }
+                        </select>
+                    </div>
+                        <button type="submit" class="btn btn-primary">Обновить посещение</button>
+                    </form>
+                </td>
+            </tr>
+
+
+            @*<div class="schedule-table" style="display: none;">
+                <form asp-action="UpdateAppointment" asp-controller="Appointment" method="post">
+                    <input type="hidden" name="id" value="@appointment.AppointmentId.ToString()">
+                    <div class="form-group">
+                        <label for="appointmentType">Тип посещения:</label>
+                        <input type="text" class="form-control" id="appointmentType" name="AppointmentType">
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentDate">Дата посещения:</label>
+                        <input type="date" class="form-control" id="appointmentDate" name="AppointmentDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentPrice">Цена посещения:</label>
+                        <input type="number" class="form-control" id="appointmentPrice" name="AppointmentPrice">
+                    </div>
+                    <div class="form-group">
+                        <label for="doctorId">Доктор:</label>
+                        <select class="form-control" id="doctorId" name="DoctorId">
+                            <option value="">Выберите доктора</option>
+                            @foreach (var doctor in ViewBag.Doctors)
+                            {
+                                <option value="@doctor.DoctorId.ToString()">@doctor.ToString()</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientId">Пациент:</label>
+                        <select class="form-control" id="patientId" name="PatientId">
+                            <option value="">Выберите пациента</option>
+                            @foreach (var patient in ViewBag.Patients)
+                            {
+                                <option value="@patient.PatientId.ToString()">@patient.ToString()</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Добавить посещение</button>
+                </form>
+            </div>*@
         }
     </tbody>
 </table>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.toggle-update-btn').click(function() {
+                $(this).closest('tr').next('.schedule-table').slideToggle(100);
+            });
+        });
+    </script>
+}
+

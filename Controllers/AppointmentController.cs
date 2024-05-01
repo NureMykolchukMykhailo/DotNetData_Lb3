@@ -31,8 +31,12 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpPost("appointments/add")]
-        public async Task<IActionResult> InsertAppointment([FromForm] Appointment a)
+        public async Task<IActionResult> InsertAppointment([FromForm] string PatientId, string DoctorId, Appointment a)
         {
+            a.DoctorId = new ObjectId(DoctorId);
+            a.PatientId = new ObjectId(PatientId);
+            Console.WriteLine(a.DoctorId);
+            Console.WriteLine(a.PatientId);
             await appointmentsRepo.InsertNewAppointment(a);
             return RedirectToAction("GetAppointments");
         }
@@ -45,8 +49,12 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpPost("appointments/update")]
-        public async Task<IActionResult> UpdateAppointment(string id, Appointment a)
+        public async Task<IActionResult> UpdateAppointment(string id, string PatientId, string DoctorId, Appointment a)
         {
+            a.DoctorId = new ObjectId(DoctorId);
+            a.PatientId = new ObjectId(PatientId);
+            Console.WriteLine(a.DoctorId);
+            Console.WriteLine(a.PatientId);
             await appointmentsRepo.UpdateAppointment(id, a);
 
             return RedirectToAction("GetAppointments");
