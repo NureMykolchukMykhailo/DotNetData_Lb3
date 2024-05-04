@@ -42,7 +42,6 @@ namespace DotNetData_Lb3.Repos
             if (patients is not null && patients.Any())
                 filters.Add(Builders<Appointment>.Filter.In(a => a.PatientId, patients));
 
-            // это надо будет потом убрать, это для теста
             filters.Clear();
 
 

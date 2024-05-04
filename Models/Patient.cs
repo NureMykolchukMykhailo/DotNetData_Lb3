@@ -16,7 +16,8 @@ namespace DotNetData_Lb3.Models
         public string PhoneNumber { get; set; }
         [BsonElement("age")]
         public int Age { get; set; }
-
+        [BsonElement("location")]
+        public Location? Location { get; set; }
         public override string ToString()
         {
             return FirstName + " " + LastName + " (" + Age + ")";

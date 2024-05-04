@@ -18,7 +18,8 @@ namespace DotNetData_Lb3.Models
         public string Speciality { get; set; }
         [BsonElement("schedule")]
         public List<Schedule>? Schedule { get; set; }
-
+        [BsonElement("location")]
+        public Location? Location { get; set; }
         public override string ToString()
         {
             return FirstName + " " + LastName + " (" + Speciality + ")";

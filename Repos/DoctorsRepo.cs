@@ -90,9 +90,6 @@ namespace DotNetData_Lb3.Repos
 
             return await collection.Find(filter).ToListAsync();
 
-            //var filter = Builders<Doctor>.Filter.Regex(d => d.FirstName , new BsonRegularExpression(name, "i"));
-
-            //return await collection.Find(filter).ToListAsync();
         }
 
         public async Task DeleteDoctorSchedule(string phoneNumber, Schedule scheduleToDelete)
