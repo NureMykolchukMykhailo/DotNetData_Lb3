@@ -119,10 +119,15 @@
 
         map.on('click', function(event) {
             if (marker !== null) {
-                map.removeLayer(marker); 
+                map.removeLayer(marker);
             }
             marker = L.marker(event.latlng).addTo(map);
             var latlng = marker.getLatLng();
+            let latinput = document.getElementById("lat");
+            let lnginput = document.getElementById("lng");
+
+            latinput.value = latlng.lat;
+            lnginput.value = latlng.lng;
             console.log(latlng.lat, latlng.lng);
         });
     </script>

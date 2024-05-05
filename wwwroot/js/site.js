@@ -23,3 +23,4 @@ minAgeSlider.addEventListener('input', function () {
 maxAgeSlider.addEventListener('input', function () {
     maxAgeLabel.innerHTML = maxAgeSlider.value;
 });
+

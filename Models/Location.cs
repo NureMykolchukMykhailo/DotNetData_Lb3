@@ -9,6 +9,6 @@ namespace DotNetData_Lb3.Models
         [BsonElement("type")] 
         public string Type { get; set; }
         [BsonElement("coordinates")]
-        List<double> Coordinates { get; set; }
+        public List<double> Coordinates { get; set; }
     }
 }
