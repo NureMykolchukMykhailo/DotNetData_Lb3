@@ -1,0 +1,67 @@
+﻿@model (Doctor? doc, Patient? patient)
+
+<div style="display: flex; flex-direction: row">
+    <form class="addingForm" asp-action="NearestDoctor" asp-controller="Patients" method="get">
+        <div class="form-group">
+            <label for="patientId">Пациент:</label>
+            <select class="form-control" id="patientId" name="id">
+                <option value="">Выберите пациента</option>
+                @foreach (var patient in ViewBag.Patients)
+                {
+                    <option value="@patient.PatientId.ToString()">@patient.ToString()</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Найти</button>
+    </form>
+
+    @if (Model.doc is not null && Model.patient is not null)
+    {
+        <div id="result" style="display: flex; flex-direction: row;">
+            <div style="margin-right: 20px">
+                <p>@Model.doc.ToString()</p>
+                <p>Долгота:@Model.doc.Location.Coordinates[0]]</p>
+                <p>Широта: @Model.doc.Location.Coordinates[1]</p>
+            </div>
+            <div>
+                <p>@Model.patient.ToString()</p>
+                <p>Долгота: @Model.patient.Location.Coordinates[0]</p>
+                <p>Широта: @Model.patient.Location.Coordinates[1]</p>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<div id="map" style="height: 700px"></div>
+<script>
+    var map = L.map('map').setView([50.436, 30.533], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+</script>
+
+@if (Model.doc is not null && Model.patient is not null)
+{
+    
+    @section Scripts {
+    <script>
+        console.log("here");
+
+        let docLat = "@Model.doc.Location.Coordinates[1]".replace(',', '.');
+        let docLng = "@Model.doc.Location.Coordinates[0]".replace(',', '.');
+        let patientLat = "@Model.patient.Location.Coordinates[1]".replace(',', '.');
+        let patientLng = "@Model.patient.Location.Coordinates[0]".replace(',', '.');
+
+        let docLatLng = L.latLng(parseFloat(docLat), parseFloat(docLng));
+        let patientLatLng = L.latLng(parseFloat(patientLat), parseFloat(patientLng));
+
+        let docMarker = L.marker(docLatLng).addTo(map).bindPopup('@Model.doc.ToString()');
+        let patientMarker = L.marker(patientLatLng).addTo(map).bindPopup('@Model.patient.ToString()');
+
+    </script>
+    }
+}
+

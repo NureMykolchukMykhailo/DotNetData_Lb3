@@ -49,5 +49,21 @@ namespace DotNetData_Lb3.Controllers
             ViewBag.AgeBoundaries = patientsRepo.GetPatientAgeBoundaries();
             return View("Patients", patients);
         }
+
+        [HttpGet("patients/nearestDoctor")]
+        public async Task<IActionResult> NearestDoctor(string? id)
+        {
+            if(id is null)
+            {
+                ViewBag.Patients = await patientsRepo.GetPatients();
+                return View("NearestDoctor");
+            }
+            else
+            {
+                var (nearestDoctor, patient) = await patientsRepo.FindNearestDoctor(id);
+                ViewBag.Patients = await patientsRepo.GetPatients();
+                return View("NearestDoctor", (nearestDoctor, patient));
+            }
+        }
     }
 }

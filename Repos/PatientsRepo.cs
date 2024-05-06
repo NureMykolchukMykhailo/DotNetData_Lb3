@@ -1,12 +1,14 @@
 ﻿using DotNetData_Lb3.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
 
 namespace DotNetData_Lb3.Repos
 {
     public class PatientsRepo
     {
         private readonly IMongoCollection<Patient> collection;
+        private readonly IMongoCollection<Doctor> doctorsCollection;
 
         public PatientsRepo()
         {
@@ -14,15 +16,18 @@ namespace DotNetData_Lb3.Repos
             collection = new MongoClient(connString)
                 .GetDatabase("hospital")
                 .GetCollection<Patient>("patients");
+            doctorsCollection = new MongoClient(connString)
+                .GetDatabase("hospital")
+                .GetCollection<Doctor>("doctors");
         }
 
         public async Task<List<Patient>> GetPatients(int? min = null, int? max = null)
         {
-            if(min is null && max is null)
+            if (min is null && max is null)
                 return await (await collection.FindAsync(x => true)).ToListAsync();
 
             return await (await collection.FindAsync(
-                Builders<Patient>.Filter.Where(p => p.Age <=max && p.Age >= min))
+                Builders<Patient>.Filter.Where(p => p.Age <= max && p.Age >= min))
                 ).ToListAsync();
         }
 
@@ -81,6 +86,25 @@ namespace DotNetData_Lb3.Repos
             var indexKeys = Builders<Patient>.IndexKeys.Ascending(p => p.PhoneNumber);
             var indexModel = new CreateIndexModel<Patient>(indexKeys, indexOptions);
             await collection.Indexes.CreateOneAsync(indexModel);
+        }
+
+        public async Task<(Doctor, Patient)> FindNearestDoctor(string id)
+        {
+            Patient patient = await GetPatientById(id);
+
+            var filter = Builders<Doctor>.Filter.Near(
+                doctor => doctor.Location.Coordinates,
+                new GeoJsonPoint<GeoJson2DGeographicCoordinates>(
+                    new GeoJson2DGeographicCoordinates(patient.Location.Coordinates[0], patient.Location.Coordinates[1]))
+            );
+
+            var options = new FindOptions<Doctor>
+            {
+                Limit = 1
+            };
+
+            var nearestDoctor = await (await doctorsCollection.FindAsync(filter, options)).FirstOrDefaultAsync();
+            return (nearestDoctor, patient);
         }
 
         public (int, int) GetPatientAgeBoundaries()
