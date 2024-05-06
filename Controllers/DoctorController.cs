@@ -25,21 +25,21 @@ namespace DotNetData_Lb3.Controllers
         [HttpPost("doctors/add")]
         public async Task<IActionResult> InsertDoctor([FromForm] Doctor d, string Latitude, string Longitude)
         {
-            //try
-            //{
-            d.Location = new Location()
+            try
             {
-                Type = "Point",
-                Coordinates = new List<double> { Convert.ToDouble(Latitude.Replace('.', ',')), 
-                    Convert.ToDouble(Longitude.Replace('.', ',')) }
-            };
-            await doctorsRepo.InsertNewDoctor(d);
-            //}
-            //catch (Exception ex)
-            //{
-            //    TempData.Add("Exeption", ex.Message);
-            //    return RedirectToAction("GetDoctors");
-            //}
+                d.Location = new Location()
+                {
+                    Type = "Point",
+                    Coordinates = new List<double> { Convert.ToDouble(Longitude.Replace('.', ',')), 
+                        Convert.ToDouble(Latitude.Replace('.', ',')) }
+                };
+                await doctorsRepo.InsertNewDoctor(d);
+            }
+            catch (Exception ex)
+            {
+                TempData.Add("Exeption", ex.Message);
+                return RedirectToAction("GetDoctors");
+            }
             return RedirectToAction("GetDoctors");
         }
 

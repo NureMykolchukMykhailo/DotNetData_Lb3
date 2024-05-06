@@ -23,8 +23,14 @@ namespace DotNetData_Lb3.Controllers
         }
 
         [HttpPost("patients/add")]
-        public async Task<IActionResult> InsertPatient([FromForm] Patient p)
+        public async Task<IActionResult> InsertPatient([FromForm] Patient p, string Latitude, string Longitude)
         {
+            p.Location = new Location()
+            {
+                Type = "Point",
+                Coordinates = new List<double> { Convert.ToDouble(Longitude.Replace('.', ',')),
+                        Convert.ToDouble(Latitude.Replace('.', ',')) }
+            };
             await patientsRepo.InsertNewPatient(p);
             return RedirectToAction("GetPatients");
         }

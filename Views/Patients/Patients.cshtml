@@ -18,6 +18,8 @@
     <button type="submit" class="btn btn-primary">search</button>
 </form>
 
+<div id="map"></div>
+
 <div class="adding-updating-forms">
     <partial name="PatientUpdating" />
 
@@ -42,12 +44,36 @@
                 <td>@patient.PhoneNumber</td>
                 <td>@patient.Age</td>
                 <td>
-                <form asp-action="DelPatient" asp-controller="Patients" method="post">
-                    <input type="hidden" name="phoneNumber" value="@patient.PhoneNumber" />
-                    <button type="submit" class="toggle-schedule-btn">delete</button>
-                </form>
+                    <form asp-action="DelPatient" asp-controller="Patients" method="post">
+                        <input type="hidden" name="phoneNumber" value="@patient.PhoneNumber" />
+                        <button type="submit" class="toggle-schedule-btn">delete</button>
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+
+    <script>
+        var map = L.map('map').setView([50.436, 30.533], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        var marker = null;
+
+        map.on('click', function(event) {
+            if (marker !== null) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker(event.latlng).addTo(map);
+            var latlng = marker.getLatLng();
+            let latinput = document.getElementById("lat");
+            let lnginput = document.getElementById("lng");
+
+            latinput.value = latlng.lat;
+            lnginput.value = latlng.lng;
+        });
+    </script>
+}

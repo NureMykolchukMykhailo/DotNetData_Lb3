@@ -16,5 +16,15 @@
         <label for="age">Возраст:</label>
         <input type="number" class="form-control" id="age" name="Age">
     </div>
+     <div style="display: flex; flex-direction: row">
+        <div class="form-group">
+            <label for="lat">Широта:</label>
+            <input type="text" class="form-control" id="lat" name="Latitude" required readonly>
+        </div>
+        <div class="form-group">
+            <label for="lng">Долгота:</label>
+            <input type="text" class="form-control" id="lng" name="Longitude" required readonly>
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
