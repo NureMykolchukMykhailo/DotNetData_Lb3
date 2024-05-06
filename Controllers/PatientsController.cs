@@ -7,9 +7,11 @@ namespace DotNetData_Lb3.Controllers
     public class PatientsController : Controller
     {
         private PatientsRepo patientsRepo;
-        public PatientsController(PatientsRepo _patientsRepo)
+        private DoctorsRepo doctorsRepo;
+        public PatientsController(PatientsRepo _patientsRepo, DoctorsRepo doctorsRepo)
         {
             patientsRepo = _patientsRepo;
+            this.doctorsRepo = doctorsRepo;
         }
 
         [HttpGet("patients")]
@@ -56,6 +58,7 @@ namespace DotNetData_Lb3.Controllers
             if(id is null)
             {
                 ViewBag.Patients = await patientsRepo.GetPatients();
+                ViewBag.Doctors = await doctorsRepo.GetDoctors();
                 return View("NearestDoctor");
             }
             else
